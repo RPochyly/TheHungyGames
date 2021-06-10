@@ -17,47 +17,45 @@ import java.io.IOException;
 
 public final class TheHungyGames extends JavaPlugin implements Listener {
 
-    private File dataFile;
-    private FileConfiguration dataFileConfig;
+    // TODO: Souborová databáze, nebo spíš uložení do souboru. Zatím netestované a vykomentované protože jsem to ještě nechtěl dělat
+    //private File dataFile;
+    //private FileConfiguration dataFileConfig;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this,this);
         this.getCommand("thg").setExecutor(new Commands(this));
-        createDataFile();
+        //createDataFile();
 
         System.out.println("The Hungy Games has been initialized");
 
-        // DEBUG (can be deleted)
-        Contestant RPochyly = new Contestant();
-        RPochyly.name = "RPochyly";
-        RPochyly.lifes = 3;
-        RPochyly.points = 7;
-        System.out.println("Information about " + RPochyly.name + ": Lifes - " + RPochyly.lifes + "; Points - " + RPochyly.points);
 
     }
 
-    public FileConfiguration getDataFileConfig() {
-        return this.dataFileConfig;
-    }
+    // Znovu soubory na uložení stavu
 
-    private void createDataFile() {
-        dataFile = new File(getDataFolder(), "data.yml");
-        if(!dataFile.exists()) {
-            dataFile.getParentFile().mkdirs();
-            saveResource("data.yml", false);
-        }
+    //public FileConfiguration getDataFileConfig() {
+    //    return this.dataFileConfig;
+    //}
 
-        dataFileConfig = new YamlConfiguration();
-        try {
-            dataFileConfig.load(dataFile);
-        } catch(IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
+    //private void createDataFile() {
+    //    dataFile = new File(getDataFolder(), "data.yml");
+    //    if(!dataFile.exists()) {
+    //        dataFile.getParentFile().mkdirs();
+    //        saveResource("data.yml", false);
+    //    }
+    //    dataFileConfig = new YamlConfiguration();
+    //    try {
+    //        dataFileConfig.load(dataFile);
+    //    } catch(IOException | InvalidConfigurationException e) {
+    //        e.printStackTrace();
+    //    }
+//}
 
+        //ArrayList<Contestant> contestantArrayList = new ArrayList<Contestant>();
 
+    // Kontroluje hráče, zatím nemá fungovat i když jaksi funguje. Toto dodělám potom
     @EventHandler
     public void DamageTaken(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
@@ -73,7 +71,6 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
         }
     }
 
-    // TODO: Detekovat smrt hráčem, přidat důvod proč zemřel; Nápad - loterie manhunt koho musíš zabít
     @Override
     public void onDisable() {
         // Plugin shutdown logic
