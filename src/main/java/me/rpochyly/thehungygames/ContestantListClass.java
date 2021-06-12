@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ContestantListClass {
 
-  public List<Contestant> contestantList = new ArrayList<>();
+  public static List<Contestant> contestantList = new ArrayList<>();
 
   public List<Contestant> getContestantList() {
     return contestantList;

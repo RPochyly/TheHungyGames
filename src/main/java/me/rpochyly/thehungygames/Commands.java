@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 
 public class Commands implements CommandExecutor {
     private final TheHungyGames plugin;
-    private ContestantListClass contestantList;
+    public static ContestantListClass contestantList;
 
     public Commands(TheHungyGames plugin) {
         this.plugin = plugin;
-        this.contestantList = new ContestantListClass();
+        this.contestantList = TheHungyGames.contestantList;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Commands implements CommandExecutor {
 
         if (args.length == 0) {
             sender.sendMessage(
-                    ChatColor.GOLD + "The Hungy Games" + ChatColor.AQUA + " - " + ChatColor.RED + "BETA VERSION 0.1");
+                    ChatColor.GOLD + "The Hungy Games" + ChatColor.AQUA + " - " + ChatColor.RED + "BETA VERSION 0.2 (EVENTS)");
             return true;
         } else if (args[0].equalsIgnoreCase("signup")) {
             if (currentContestant == null) {
@@ -61,21 +61,26 @@ public class Commands implements CommandExecutor {
                 }
             }
         } else if (args[0].equalsIgnoreCase("exit")) {
+
             if (currentContestant == null) {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "You have to be registered first to unregister.");
             } else {
-                if (args.length == 2) {
-                    if (args[1].equalsIgnoreCase("confirm")) {
-                        currentContestant = contestantList.getByName(sender.getName());
-                        contestantList.removeContestantList(currentContestant);
-                        sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Successfully removed " + ChatColor.BOLD + currentContestant.name + ChatColor.RESET + ChatColor.GREEN + " from contestants!");
+                if(currentContestant.dead == true) {
+                    sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "You cannot unregister while being dead. You'll be automatically unregistered when THG ends.");
+                } else {
+                    if (args.length == 2) {
+                        if (args[1].equalsIgnoreCase("confirm")) {
+                            currentContestant = contestantList.getByName(sender.getName());
+                            contestantList.removeContestantList(currentContestant);
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Successfully removed " + ChatColor.BOLD + currentContestant.name + ChatColor.RESET + ChatColor.GREEN + " from contestants!");
+                        } else {
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.RESET + "Are you sure you want to leave The Hungy Games? Your points and lifes will be removed and you can't join again until the next season of The Hungy Games.");
+                            sender.sendMessage(ChatColor.YELLOW + "If you're sure, please use " + ChatColor.RED + ChatColor.BOLD + "/thg exit confirm");
+                        }
                     } else {
                         sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.RESET + "Are you sure you want to leave The Hungy Games? Your points and lifes will be removed and you can't join again until the next season of The Hungy Games.");
-                        sender.sendMessage(ChatColor.YELLOW + "If you're sure, please use " + ChatColor.RED + ChatColor.BOLD + "/thg exit confirm");
+                        sender.sendMessage(ChatColor.YELLOW + "If you're sure, please use " + ChatColor.RED + ChatColor.BOLD + " /thg exit confirm");
                     }
-                } else {
-                    sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.RESET + "Are you sure you want to leave The Hungy Games? Your points and lifes will be removed and you can't join again until the next season of The Hungy Games.");
-                    sender.sendMessage(ChatColor.YELLOW + "If you're sure, please use " + ChatColor.RED + ChatColor.BOLD + " /thg exit confirm");
                 }
             }
         }
