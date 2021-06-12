@@ -5,16 +5,5 @@ api-version: 1.16
 authors: [ RPochyly4, EBAN92 ]
 description: The plugin used in The Hungy Games
 commands:
-  thg manage:
-    description: Command for admins to manage The Hungy Games.
-    usage: /thg manage [subcommand] [arguments]
-    permission: TheHungyGames.admin
-    permission-message: You dont have <permission> to use the admin commands. If you believe this is a mistake, please contact the admins.
-  thg signup:
-    description: Command used to sign up for The Hungy Games.
-    usage: /thg signup
-    permission: TheHungyGames.signup
-    permission-message: Either you've been set to a spectator role and can't sign up for The Hungy Games or you don't have permissions at all. If you think it's the latter, you should contact the admins.
   thg:
-    description: Show plugin version.
-    usage: /thg
+    description: Main The Hungy Games command.

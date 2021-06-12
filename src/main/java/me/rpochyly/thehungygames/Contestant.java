@@ -1,6 +1,5 @@
 package me.rpochyly.thehungygames;
 
-// Toto je ta třída pro toho soutěžícíhooo
 
 public class Contestant {
     public int points, lifes;
@@ -13,7 +12,4 @@ public class Contestant {
         this.lifes = lifes;
         this.points = points;
     }
-
-
-
 }
