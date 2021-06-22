@@ -72,7 +72,7 @@ public class Commands implements CommandExecutor {
                         if (args[1].equalsIgnoreCase("confirm")) {
                             currentContestant = contestantList.getByName(sender.getName());
                             contestantList.removeContestantList(currentContestant);
-                            TheHungyGames.fileAccess.savePlayerData();
+                            TheHungyGames.fileAccess.removePlayerData(currentContestant.name);
                             sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Successfully removed " + ChatColor.BOLD + currentContestant.name + ChatColor.RESET + ChatColor.GREEN + " from contestants!");
                         } else {
                             sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.RESET + "Are you sure you want to leave The Hungy Games? Your points and lifes will be removed and you can't join again until the next season of The Hungy Games.");
@@ -92,6 +92,10 @@ public class Commands implements CommandExecutor {
                 TheHungyGames.fileAccess.savePlayerData();
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "All data successfully saved!");
             }
+        } else if (args[0].equalsIgnoreCase("reload")) {
+            TheHungyGames.fileAccess.createDataFile();
+            TheHungyGames.fileAccess.loadPlayerData();
+            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Reloaded all data!");
         }
         return false;
     }

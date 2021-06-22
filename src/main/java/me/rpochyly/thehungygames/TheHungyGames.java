@@ -53,18 +53,23 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
         if (currentContestant == null) {
             System.out.println("Player " + playerName + " is not in Contestants list");
         } else {
-            // String title, String subtitle, int fadeIn, int stay, int fadeOut. 
-            currentContestant.setLifes((currentContestant.lifes - 1));
-            event.getEntity().sendTitle(ChatColor.RED + "You have died! ", ChatColor.RED + "" + ChatColor.BOLD + String.valueOf(currentContestant.lifes) + " lifes" + ChatColor.RESET + ChatColor.RED + " remaining", 10, 140, 30);
-            event.setDeathMessage(null);
-            if(currentContestant.lifes == 0) {
-                currentContestant.dead = true;
-                event.getEntity().setGameMode(GameMode.SPECTATOR);
-                Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has lost all their lifes.");
-            } else if (currentContestant.lifes == 1) {
-                Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has now only " + String.valueOf(currentContestant.lifes) + " life.");
-            } else {
-                Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has now only " + String.valueOf(currentContestant.lifes) + " lifes.");
+            if(currentContestant.lifes > 0) {
+                currentContestant.setLifes((currentContestant.lifes - 1));
+                if(currentContestant.lifes == 1) {
+                    event.getEntity().sendTitle(ChatColor.RED + "You have died! ", ChatColor.RED + "" + ChatColor.BOLD + String.valueOf(currentContestant.lifes) + " life" + ChatColor.RESET + ChatColor.RED + " remaining", 10, 140, 30);
+                } else {
+                    event.getEntity().sendTitle(ChatColor.RED + "You have died! ", ChatColor.RED + "" + ChatColor.BOLD + String.valueOf(currentContestant.lifes) + " lifes" + ChatColor.RESET + ChatColor.RED + " remaining", 10, 140, 30);
+                }
+                event.setDeathMessage(null);
+                if(currentContestant.lifes == 0) {
+                    currentContestant.dead = true;
+                    event.getEntity().setGameMode(GameMode.SPECTATOR);
+                    Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has lost all their lifes.");
+                } else if (currentContestant.lifes == 1) {
+                    Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has now only " + String.valueOf(currentContestant.lifes) + " life.");
+                } else {
+                    Bukkit.broadcastMessage(ChatColor.GOLD + "[THG] " + ChatColor.RED + "The player " + ChatColor.BOLD + playerName + ChatColor.RESET + ChatColor.RED + " has now only " + String.valueOf(currentContestant.lifes) + " lifes.");
+                }
             }
             TheHungyGames.fileAccess.savePlayerData();
         }
