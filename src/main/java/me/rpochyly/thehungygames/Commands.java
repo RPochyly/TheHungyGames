@@ -11,7 +11,7 @@ public class Commands implements CommandExecutor {
 
     public Commands(TheHungyGames plugin) {
         this.plugin = plugin;
-        this.contestantList = TheHungyGames.contestantList;
+        Commands.contestantList = TheHungyGames.contestantList;
     }
 
     @Override
@@ -28,6 +28,7 @@ public class Commands implements CommandExecutor {
             if (currentContestant == null) {
                 contestantList.addContestantList(sender.getName(), 3, 0);
                 currentContestant = contestantList.getByName(sender.getName());
+                TheHungyGames.fileAccess.savePlayerData();
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Successfuly registered as " + ChatColor.BOLD + currentContestant.name);
             } else {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "You are already registered. Please unregister using /thg exit");
@@ -61,7 +62,6 @@ public class Commands implements CommandExecutor {
                 }
             }
         } else if (args[0].equalsIgnoreCase("exit")) {
-
             if (currentContestant == null) {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "You have to be registered first to unregister.");
             } else {
@@ -72,6 +72,7 @@ public class Commands implements CommandExecutor {
                         if (args[1].equalsIgnoreCase("confirm")) {
                             currentContestant = contestantList.getByName(sender.getName());
                             contestantList.removeContestantList(currentContestant);
+                            TheHungyGames.fileAccess.savePlayerData();
                             sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Successfully removed " + ChatColor.BOLD + currentContestant.name + ChatColor.RESET + ChatColor.GREEN + " from contestants!");
                         } else {
                             sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.RESET + "Are you sure you want to leave The Hungy Games? Your points and lifes will be removed and you can't join again until the next season of The Hungy Games.");
@@ -82,6 +83,14 @@ public class Commands implements CommandExecutor {
                         sender.sendMessage(ChatColor.YELLOW + "If you're sure, please use " + ChatColor.RED + ChatColor.BOLD + " /thg exit confirm");
                     }
                 }
+            }
+        } else if (args[0].equalsIgnoreCase("save")) {
+            if(contestantList.getContestantList().size() == 0) {
+                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Saving player data failed!");
+                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "There is no data to save.");
+            } else {
+                TheHungyGames.fileAccess.savePlayerData();
+                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "All data successfully saved!");
             }
         }
         return false;
