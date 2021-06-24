@@ -2,12 +2,18 @@ package me.rpochyly.thehungygames;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -15,10 +21,13 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
 
     public static ContestantListClass contestantList;
     public static FileAccess fileAccess;
+    public static Event eventTHG;
+    public static Location waitingLocation;
 
     public TheHungyGames() {
         TheHungyGames.contestantList = new ContestantListClass();
         TheHungyGames.fileAccess = new FileAccess(this);
+        TheHungyGames.eventTHG = new Event(this);
     }
 
     @Override
@@ -27,7 +36,7 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this,this);
         this.getCommand("thg").setExecutor(new Commands(this));
         fileAccess.createDataFile();
-        fileAccess.loadPlayerData();
+        fileAccess.loadAllData();
 
         System.out.println("The Hungy Games has been initialized");
     }
@@ -45,6 +54,16 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
     //         }
     //     }
     // }
+
+    public static List<Player> getOnlinePlayerList() {
+        List<Player> playerList = new ArrayList<>(Bukkit.getOnlinePlayers());
+        return playerList;
+    }
+
+    @EventHandler
+    public void playerJoinEvent(PlayerJoinEvent event) {
+        eventTHG.showTimer();
+    }
 
     @EventHandler
     public void playerDeathEvent(PlayerDeathEvent event) {
@@ -79,6 +98,6 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
         System.out.println("Disabling The Hungy Games");
-        fileAccess.savePlayerData();
+        fileAccess.saveAllData();
     }
 }

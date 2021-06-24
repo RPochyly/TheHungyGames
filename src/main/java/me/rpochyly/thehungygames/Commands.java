@@ -1,17 +1,21 @@
 package me.rpochyly.thehungygames;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
     private final TheHungyGames plugin;
     public static ContestantListClass contestantList;
+    public static Location waitingLocation;
 
     public Commands(TheHungyGames plugin) {
         this.plugin = plugin;
         Commands.contestantList = TheHungyGames.contestantList;
+        Commands.waitingLocation = TheHungyGames.waitingLocation;
     }
 
     @Override
@@ -22,7 +26,7 @@ public class Commands implements CommandExecutor {
 
         if (args.length == 0) {
             sender.sendMessage(
-                    ChatColor.GOLD + "The Hungy Games" + ChatColor.AQUA + " - " + ChatColor.RED + "BETA VERSION 0.2 (EVENTS)");
+                    ChatColor.GOLD + "The Hungy Games" + ChatColor.AQUA + " - " + ChatColor.RED + "ALPHA VERSION 0.1 (TIMERS AND SETUP)");
             return true;
         } else if (args[0].equalsIgnoreCase("signup")) {
             if (currentContestant == null) {
@@ -33,9 +37,39 @@ public class Commands implements CommandExecutor {
             } else {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "You are already registered. Please unregister using /thg exit");
             }
-        } else if (args[0].equalsIgnoreCase("manage")) {
+        } else if (args[0].equalsIgnoreCase("admin")) {
             if (args.length > 1) {
-                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "TODO: Manage mode");
+                if (args[1].equalsIgnoreCase("timer")) {
+                    if (args[2].equalsIgnoreCase("set")) {
+                        if (args.length != 4) {
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Wrong syntax!");
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Please use: /thg manage timer set [time in seconds].");
+                        } else {
+                            int seconds;
+                            try {
+                                seconds = Integer.parseInt(args[3]);
+                            } catch (NumberFormatException e) {
+                                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "The value you entered is not a number!");
+                                return false;
+                            }
+                            Double doubleSeconds = Double.valueOf(seconds);
+                            TheHungyGames.eventTHG.Timer(doubleSeconds);
+                        }
+                    }
+                } else if (args[1].equalsIgnoreCase("setwaitspawn")) {
+                    Player player = (Player) sender;
+                    waitingLocation = player.getLocation();
+                    TheHungyGames.fileAccess.getCustomConfig().set("options.waitinglocation", waitingLocation);
+                    TheHungyGames.fileAccess.saveAllData();
+                    sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "Wait spawn has been set!");
+                } else if (args[1].equalsIgnoreCase("tpwaitspawn")) {
+                    if (TheHungyGames.waitingLocation != null) {
+                        Player player = (Player) sender;
+                        player.teleport(TheHungyGames.waitingLocation);
+                    } else {
+                        sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "There is no wait spawn location set!");
+                    }
+                }
             } else {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Not enough arguments!");
             }
@@ -85,13 +119,8 @@ public class Commands implements CommandExecutor {
                 }
             }
         } else if (args[0].equalsIgnoreCase("save")) {
-            if(contestantList.getContestantList().size() == 0) {
-                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Saving player data failed!");
-                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "There is no data to save.");
-            } else {
-                TheHungyGames.fileAccess.savePlayerData();
-                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "All data successfully saved!");
-            }
+            TheHungyGames.fileAccess.saveAllData();
+            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.GREEN + "All data successfully saved!");
         } else if (args[0].equalsIgnoreCase("reload")) {
             TheHungyGames.fileAccess.createDataFile();
             TheHungyGames.fileAccess.loadPlayerData();

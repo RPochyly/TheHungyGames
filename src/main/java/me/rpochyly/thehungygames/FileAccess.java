@@ -42,10 +42,7 @@ public class FileAccess {
     }
 
     public void savePlayerData() {
-        if(contestantList.getContestantList().size() == 0) {
-            System.out.println("Saving player data failed!");
-            System.out.println("There is no data to save.");
-        } else {
+        if(contestantList.getContestantList().size() != 0) {
             for (int i = 0; i < contestantList.getContestantList().size(); i++) {
                 String playerName = contestantList.getContestantList().get(i).name;
                 int playerLifes = contestantList.getContestantList().get(i).lifes;
@@ -59,7 +56,15 @@ public class FileAccess {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void saveAllData() {
+        savePlayerData();
+        try {
+            getCustomConfig().save(pluginDataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removePlayerData(String playerName) {
@@ -89,11 +94,15 @@ public class FileAccess {
                 }
             }
         } else {
-            System.out.println("There is nothing to load.");
+            System.out.println("There is no player data to load.");
         }
     }
-}
 
+    public void loadAllData() {
+        loadPlayerData();
+        TheHungyGames.waitingLocation = this.getCustomConfig().getLocation("options.waitinglocation");
+    }
+}
             //    String playerName = contestantList.getContestantList().get(i).name;
             //    int playerLifes = contestantList.getContestantList().get(i).lifes;
             //    int playerPoints = contestantList.getContestantList().get(i).points;
