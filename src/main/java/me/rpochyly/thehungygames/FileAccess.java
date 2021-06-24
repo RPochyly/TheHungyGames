@@ -2,6 +2,8 @@ package me.rpochyly.thehungygames;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,8 +49,12 @@ public class FileAccess {
                 String playerName = contestantList.getContestantList().get(i).name;
                 int playerLifes = contestantList.getContestantList().get(i).lifes;
                 int playerPoints = contestantList.getContestantList().get(i).points;
+                boolean playerPaused = contestantList.getContestantList().get(i).paused;
+                Location lastLocation = contestantList.getContestantList().get(i).lastLocation;
                 this.getCustomConfig().set("player." + String.valueOf(playerName) + ".lifes", playerLifes);
                 this.getCustomConfig().set("player." + String.valueOf(playerName) + ".points", playerPoints);
+                this.getCustomConfig().set("player." + String.valueOf(playerName) + ".paused", playerPaused);
+                this.getCustomConfig().set("player." + String.valueOf(playerName) + ".lastlocation", lastLocation);
             }
         }
         try {
@@ -72,6 +78,8 @@ public class FileAccess {
             if(this.getCustomConfig().getConfigurationSection("player").contains(playerName)) {
                 this.getCustomConfig().set("player." + String.valueOf(playerName) + ".lifes", null);
                 this.getCustomConfig().set("player." + String.valueOf(playerName) + ".points", null);
+                this.getCustomConfig().set("player." + String.valueOf(playerName) + ".paused", null);
+                this.getCustomConfig().set("player." + String.valueOf(playerName) + ".lastlocation", null);
                 this.getCustomConfig().set("player." + String.valueOf(playerName), null);
             } else {
                 System.out.println("The requested player " + playerName + " cannot be removed because they don't exist or aren't saved yet.");
@@ -89,8 +97,13 @@ public class FileAccess {
             for(String playerName : playerSection.getKeys(false)) {
                 int playerPoints = this.getCustomConfig().getInt("player." + playerName + ".points");
                 int playerLifes = this.getCustomConfig().getInt("player." + playerName + ".lifes");
+                boolean playerPaused = this.getCustomConfig().getBoolean("player." + playerName + ".paused");
+                Location lastLocation = this.getCustomConfig().getLocation("player." + playerName + ".lastlocation");
                 if (contestantList.getByName(playerName) == null) {
                     contestantList.addContestantList(playerName, playerLifes, playerPoints);
+                    Contestant contestant = contestantList.getByName(playerName);
+                    contestant.paused = playerPaused;
+                    contestant.lastLocation = lastLocation;
                 }
             }
         } else {

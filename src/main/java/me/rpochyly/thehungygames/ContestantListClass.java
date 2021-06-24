@@ -3,6 +3,7 @@ package me.rpochyly.thehungygames;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ContestantListClass {
 
   public static List<Contestant> contestantList = new ArrayList<>();

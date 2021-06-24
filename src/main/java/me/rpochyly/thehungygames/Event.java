@@ -16,16 +16,16 @@ public class Event {
     private BukkitTask timer;
     public static List<Player> playerList;
     public static boolean timerRunning = false;
+    public static BossBar bossBar;
 
     public Event(TheHungyGames plugin) {
         this.plugin = plugin;
         Event.playerList = TheHungyGames.getOnlinePlayerList();
     }
-
-    BossBar bossBar = Bukkit.createBossBar("Time remaining", BarColor.YELLOW, BarStyle.SEGMENTED_10);
-
+        
     public void Timer(final Double targetSeconds) {
         if (timerRunning != true) {
+            bossBar = Bukkit.createBossBar("Time remaining", BarColor.YELLOW, BarStyle.SEGMENTED_10);
             timerRunning = true;
             this.timer = new BukkitRunnable(){
                 Double seconds = targetSeconds;
@@ -54,6 +54,12 @@ public class Event {
         bossBar.setVisible(true);
         for (Player player : TheHungyGames.getOnlinePlayerList()) {
             bossBar.addPlayer(player);
+        }
+    }
+
+    public void tpToWaitingSpawn(Player player) {
+        if (TheHungyGames.waitingLocation != null) {
+            player.teleport(TheHungyGames.waitingLocation);
         }
     }
 }

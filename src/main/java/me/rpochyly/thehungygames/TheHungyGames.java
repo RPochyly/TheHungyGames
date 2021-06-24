@@ -9,9 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -62,7 +64,22 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
 
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event) {
-        eventTHG.showTimer();
+        if (Event.bossBar != null) {
+            eventTHG.showTimer();
+        }
+    }
+
+    @EventHandler
+    public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        if(event.getDamager().getType() == EntityType.PLAYER) {
+            Player attacker = (Player) event.getDamager();
+            if (TheHungyGames.contestantList.getByName(attacker.getName()) != null){
+                Contestant attackerContestant = TheHungyGames.contestantList.getByName(attacker.getName());
+                if (attackerContestant.paused == true) {
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -73,7 +90,7 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
             System.out.println("Player " + playerName + " is not in Contestants list");
         } else {
             if(currentContestant.lifes > 0) {
-                currentContestant.setLifes((currentContestant.lifes - 1));
+                currentContestant.lifes = currentContestant.lifes - 1;
                 if(currentContestant.lifes == 1) {
                     event.getEntity().sendTitle(ChatColor.RED + "You have died! ", ChatColor.RED + "" + ChatColor.BOLD + String.valueOf(currentContestant.lifes) + " life" + ChatColor.RESET + ChatColor.RED + " remaining", 10, 140, 30);
                 } else {
