@@ -45,6 +45,7 @@ public class Event {
             showTimer();
         } else {
             timer.cancel();
+            bossBar.removeAll();
             timerRunning = false;
             this.Timer(targetSeconds);
         }
