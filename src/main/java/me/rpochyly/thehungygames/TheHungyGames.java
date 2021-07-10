@@ -9,12 +9,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,20 +45,6 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
         System.out.println("The Hungy Games has been initialized");
     }
 
-    // @EventHandler
-    // public void DamageTaken(EntityDamageByEntityEvent event) {
-    //     Entity entity = event.getEntity();
-    //     Entity attacker = event.getDamager();
-    //     if()
-    //     if(entity instanceof Player) {
-    //         if(attacker instanceof Player) {
-    //             System.out.println("This player has killed you: " + attacker.toString());
-    //         } else {
-    //             System.out.println("Entity " + attacker.toString() + " has killed you");
-    //         }
-    //     }
-    // }
-
     public static List<Player> getOnlinePlayerList() {
         List<Player> playerList = new ArrayList<>(Bukkit.getOnlinePlayers());
         return playerList;
@@ -66,6 +54,7 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
     public void playerJoinEvent(PlayerJoinEvent event) {
         if (Event.bossBar != null) {
             eventTHG.showTimer();
+
         }
     }
 
@@ -108,6 +97,15 @@ public final class TheHungyGames extends JavaPlugin implements Listener {
                 }
             }
             TheHungyGames.fileAccess.savePlayerData();
+        }
+    }
+
+    @EventHandler
+    public void PlayerInteractionEvent(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (player.getInventory().getItemInMainHand().getType().equals(Material.KNOWLEDGE_BOOK) ) {
+            eventTHG.usePointsItem(player, player.getInventory().getItemInMainHand());
+            event.setCancelled(true);
         }
     }
 

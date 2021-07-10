@@ -124,6 +124,26 @@ public class Commands implements CommandExecutor {
                     } else {
                         sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "There is no wait spawn location set!");
                     }
+                } else if (args[1].equalsIgnoreCase("item")) {
+                    if (args.length == 4) {
+                        if (args[2].equalsIgnoreCase("points")) {
+                            int points;
+                            Player player = (Player) sender;
+                            try {
+                                points = Integer.parseInt(args[3]);
+                            } catch (NumberFormatException e) {
+                                sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "The value you entered is not a number!");
+                                return false;
+                            }
+                            TheHungyGames.eventTHG.givePointsItem(player, points);
+                        } else {
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Not enough arguments!");
+                            sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Please use /thg admin item points [number]");
+                        }
+                    } else {
+                        sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Not enough arguments!");
+                        sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Please use /thg admin item points [number]");
+                    }
                 }
             } else {
                 sender.sendMessage(ChatColor.GOLD + "[THG] " + ChatColor.YELLOW + ChatColor.ITALIC + "Not enough arguments!");
